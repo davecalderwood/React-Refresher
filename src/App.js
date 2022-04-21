@@ -1,71 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-// import CourseGoalList from './components/CourseGoals/CourseGoalList/CourseGoalList';
-// import CourseInput from './components/CourseGoals/CourseInput/CourseInput';
-import AddUser from './components/Users/AddUser';
-import UsersList from './components/Users/UsersList';
+import Login from './components/Login/Login';
+import Home from './components/Home/Home';
+import MainHeader from './components/MainHeader/MainHeader';
 
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-import './App.css';
+  useEffect(() => {
+    const userLoggedInInfo = localStorage.getItem('isLoggedIn');
 
-const App = () => {
-  // const [courseGoals, setCourseGoals] = useState([
-  //   { text: 'Do all exercises!', id: 'g1' },
-  //   { text: 'Finish the course!', id: 'g2' }
-  // ]);
+    if (userLoggedInInfo === '1') {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
-  // const addGoalHandler = enteredText => {
-  //   setCourseGoals(prevGoals => {
-  //     const updatedGoals = [...prevGoals];
-  //     updatedGoals.unshift({ text: enteredText, id: Math.random().toString() });
-  //     return updatedGoals;
-  //   });
-  // };
+  const loginHandler = (email, password) => {
+    // We should of course check email and password
+    // But it's just a dummy/ demo anyways
+    localStorage.setItem('isLoggedIn', '1')
+    setIsLoggedIn(true);
+  };
 
-  // const deleteItemHandler = goalId => {
-  //   setCourseGoals(prevGoals => {
-  //     const updatedGoals = prevGoals.filter(goal => goal.id !== goalId);
-  //     return updatedGoals;
-  //   });
-  // };
-
-  // let content = (
-  //   <p style={{ textAlign: 'center' }}>No goals found. Maybe add one?</p>
-  // );
-
-  // if (courseGoals.length > 0) {
-  //   content = (
-  //     <CourseGoalList items={courseGoals} onDeleteItem={deleteItemHandler} />
-  //   );
-  // }
-
-  const [usersList, setUsersList] = useState([]);
-
-  const addUserHandler = (userName, userAge) => {
-    setUsersList((prevUsersList) => {
-      return [...prevUsersList, { name: userName, age: userAge, id: Math.random.toString() }];
-    });
+  const logoutHandler = () => {
+    localStorage.removeItem('isLoggedIn');
+    setIsLoggedIn(false);
   };
 
   return (
-    <>
-      {/* <section id="goal-form">
-        <CourseInput onAddGoal={addGoalHandler} />
-      </section>
-      <section id="goals">
-        {content}
-        {courseGoals.length > 0 && (
-          <CourseGoalList
-            items={courseGoals}
-            onDeleteItem={deleteItemHandler}
-          />
-        ) // <p style={{ textAlign: 'center' }}>No goals found. Maybe add one?</p>
-        }
-      </section> */}
-      <AddUser onAddUser={addUserHandler} />
-      <UsersList users={usersList} />
-    </>
+    <React.Fragment>
+      <MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
+      <main>
+        {!isLoggedIn && <Login onLogin={loginHandler} />}
+        {isLoggedIn && <Home onLogout={logoutHandler} />}
+      </main>
+    </React.Fragment>
   );
-};
+}
 
 export default App;
