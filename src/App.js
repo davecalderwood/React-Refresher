@@ -48,7 +48,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <>
       {/* <section id="goal-form">
         <CourseInput onAddGoal={addGoalHandler} />
       </section>
@@ -64,7 +64,7 @@ const App = () => {
       </section> */}
       <AddUser onAddUser={addUserHandler} />
       <UsersList users={usersList} />
-    </div>
+    </>
   );
 };
 
