@@ -1,21 +1,26 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import Counter from './components/Counter';
-import Header from './components/Header';
-import Auth from './components/Auth';
-import UserProfile from './components/UserProfile';
+import Cart from './components/Cart/Cart';
+import Layout from './components/Layout/Layout';
+import Products from './components/Shop/Products';
 
+function App() {
+  const showCart = useSelector(state => state.ui.cartIsVisible);
+  const cart = useSelector(state => state.cart);
 
-const App = () => {
-  const isAuth = useSelector(state => state.auth.isAuthenticated);
+  useEffect(() => {
+    fetch('https://react-http-c460d-default-rtdb.firebaseio.com/cart.json', 
+    {
+      method: 'PUT',
+      body: JSON.stringify(cart),
+    });
+  }, [cart]);
 
   return (
-    <React.Fragment>
-      <Header />
-      {!isAuth && <Auth />}
-      {isAuth && <UserProfile />}
-      <Counter />
-    </React.Fragment>
+    <Layout>
+      {showCart && <Cart />}
+      <Products />
+    </Layout>
   );
 }
 
