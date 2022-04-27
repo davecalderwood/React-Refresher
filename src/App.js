@@ -1,25 +1,34 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import Cart from './components/Cart/Cart';
-import Layout from './components/Layout/Layout';
-import Products from './components/Shop/Products';
+import { Route, Switch, Redirect } from "react-router-dom";
 
-function App() {
-  const showCart = useSelector(state => state.ui.cartIsVisible);
-  const cart = useSelector(state => state.cart);
+import Layout from "./components/Layout/Layout";
+import AllQuotes from "./pages/AllQuotes";
+import QuoteDetail from "./pages/QuoteDetail";
+import NewQuote from "./pages/NewQuotes";
+import NotFound from "./pages/NotFound";
 
-  useEffect(() => {
-    fetch('https://react-http-c460d-default-rtdb.firebaseio.com/cart.json', 
-    {
-      method: 'PUT',
-      body: JSON.stringify(cart),
-    });
-  }, [cart]);
-
+const App = () => {
   return (
     <Layout>
-      {showCart && <Cart />}
-      <Products />
+      <Switch>
+        <Route path="/" exact>
+          <Redirect to="/quotes" />
+        </Route>
+        <Route path="/quotes" exact>
+          <AllQuotes />
+        </Route>
+        <Route path='/quotes/:quoteId'>
+          <QuoteDetail />
+        </Route>
+        <Route path="/new-quote">
+          <NewQuote />
+        </Route>
+
+
+        {/* Not Found Route */}
+        <Route path='*'>
+          <NotFound />
+        </Route>
+      </Switch>
     </Layout>
   );
 }
